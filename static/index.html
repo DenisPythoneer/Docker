@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Network Mapper</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/static/image/dolphin.ico">
+</head>
+<body>
+    <div class="app">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">🐳</div>
+                    <div class="logo-text">
+                        <h1>Docker Mapper</h1>
+                        <p>Визуализатор сетей</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-cards">
+                <div class="stat-card" id="statContainers">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Контейнеры</div>
+                    </div>
+                </div>
+                <div class="stat-card" id="statRunning">
+                    <div class="stat-icon">🟢</div>
+                    <div class="stat-info">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Запущено</div>
+                    </div>
+                </div>
+                <div class="stat-card" id="statNetworks">
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-info">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Сети</div>
+                    </div>
+                </div>
+                <div class="stat-card" id="statConnections">
+                    <div class="stat-icon">🔗</div>
+                    <div class="stat-info">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Соединения</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" onclick="loadData()">
+                    <span>🔄</span>
+                    Обновить
+                </button>
+                <button class="control-btn" onclick="exportPlantUML()">
+                    <span>📊</span>
+                    PlantUML
+                </button>
+                <button class="control-btn" onclick="exportJSON()">
+                    <span>💾</span>
+                    JSON
+                </button>
+                <button class="control-btn" onclick="togglePhysics()">
+                    <span>⚡</span>
+                    Физика
+                </button>
+            </div>
+
+            <div class="containers-section">
+                <h3 class="section-title">
+                    <span>📦</span>
+                    Контейнеры
+                </h3>
+                <div class="container-list" id="containerList">
+                    <div class="container-placeholder">
+                        <div class="placeholder-icon">📦</div>
+                        <div class="placeholder-text">Загрузка контейнеров...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connection-status" id="connectionStatus">
+                <div class="status-indicator"></div>
+                <span class="status-text">Подключение...</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="network-header">
+                <div class="header-left">
+                    <h2>Топология сети</h2>
+                    <p>Сетевые соединения контейнеров</p>
+                </div>
+            </div>
+
+            <div class="network-container">
+                <div id="network" class="network-visualization"></div>
+                
+                <div class="no-data-overlay" id="noDataOverlay">
+                    <div class="overlay-content">
+                        <div class="overlay-icon">🐳</div>
+                        <h3>Контейнеры не найдены</h3>
+                        <p>Запустите контейнеры чтобы увидеть топологию сети</p>
+                        <div class="overlay-actions">
+                            <button class="overlay-btn" onclick="loadData()">
+                                <span>🔄</span>
+                                Обновить
+                            </button>
+                            <button class="overlay-btn" onclick="showHelp()">
+                                <span>❓</span>
+                                Помощь
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Помощь</h3>
+                <button class="modal-close" onclick="closeHelp()">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="help-section">
+                    <h4>🚀 Быстрый старт</h4>
+                    <p>Запустите тестовые контейнеры:</p>
+                    <div class="code-block">
+                        <code>docker run -d --name nginx-web nginx</code>
+                        <code>docker run -d --name redis-cache redis:alpine</code>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <h4>🔧 Возможности</h4>
+                    <ul>
+                        <li>Мониторинг контейнеров</li>
+                        <li>Визуализация сети</li>
+                        <li>Экспорт в PlantUML</li>
+                        <li>Экспорт в JSON</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
